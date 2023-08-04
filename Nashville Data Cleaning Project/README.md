@@ -5,7 +5,7 @@ This project demonstrates the power and capabilities of SQL in performing data-c
 
 As a participant in the data cleaning challenge organized by Victor Somadina and Promise Chinonso, I had previously completed this task with Microsoft Excel but I wanted to put my SQL skills to the test as well.
 ## About the data set
-The data set used was obtained from [Kaggle](https://www.kaggle.com/datasets/yagunnersya/fifa-21-messy-raw-dataset-for-cleaning-exploring). It contains various attributes and statistics of players in the popular video game FIFA 21, such as player ratings, skill moves, preferred positions, and more. The data set consists of 18,979 rows and 77 columns of data.
+The data set used was obtained from [Kaggle](https://www.kaggle.com/datasets/yohan313/nashville-housing-data). It contains various attributes and statistics of players in the popular video game FIFA 21, such as player ratings, skill moves, preferred positions, and more. The data set consists of 18,979 rows and 77 columns of data.
 ## The purpose of data cleaning
 The purpose of data cleaning, also known as data cleansing or data scrubbing, is to improve the quality and reliability of data by identifying and correcting or removing errors, inconsistencies, and inaccuracies. Data cleaning is an essential step in the data preparation process and plays a crucial role in ensuring the accuracy and integrity of data for analysis, reporting, and decision-making purposes.
 ## The data cleaning process
