@@ -1,96 +1,79 @@
-# FIFA 21 DATA CLEANING WITH SQL
+# Nashville Housing Data Cleaning With SQL
 ![](intro.jpg)
 ## Introduction
-This project demonstrates the power and capabilities of SQL in performing data-cleaning tasks. SQL is specifically designed for working with databases and large datasets. It provides efficient query processing, making it well-suited for handling substantial amounts of data during the cleaning process. SQL queries are also explicit and reproducible. By saving and documenting the cleaning steps as SQL scripts, one can easily repeat the process on new data or share the cleaning workflow with others.
+This project highlights and demonstrates the power and capabilities of SQL in performing data-cleaning tasks. SQL is specifically designed for working with databases and bulky datasets. It provides efficient query processing, making it well-suited for handling substantial amounts of data during the cleaning process. SQL queries are also explicit and reproducible. By saving and documenting the cleaning steps as SQL scripts, one can easily repeat the process on new data or share the cleaning workflow with others.
 
-As a participant in the data cleaning challenge organized by Victor Somadina and Promise Chinonso, I had previously completed this task with Microsoft Excel but I wanted to put my SQL skills to the test as well.
 ## About the data set
-The data set used was obtained from [Kaggle](https://www.kaggle.com/datasets/yohan313/nashville-housing-data). It contains various attributes and statistics of players in the popular video game FIFA 21, such as player ratings, skill moves, preferred positions, and more. The data set consists of 18,979 rows and 77 columns of data.
+The data set used was obtained from [Kaggle](https://www.kaggle.com/datasets/yohan313/nashville-housing-data). It contains addresses, building value, names of owners, prices and various other details of properties for the Nashville housing market. The data set consists of 56,474 rows and 19 columns of data.
+
 ## The purpose of data cleaning
-The purpose of data cleaning, also known as data cleansing or data scrubbing, is to improve the quality and reliability of data by identifying and correcting or removing errors, inconsistencies, and inaccuracies. Data cleaning is an essential step in the data preparation process and plays a crucial role in ensuring the accuracy and integrity of data for analysis, reporting, and decision-making purposes.
+The purpose of data cleaning, also known as data cleansing or data scrubbing, is for improving data quality and reliability by identifying and correcting or removing inaccuracies, errors and inconsistencies. Data cleaning is a very important step in the data preparation process and plays a crucial role in ensuring the accuracy and integrity of data for analysis, reporting, and decision-making purposes.
+
 ## The data cleaning process
 ### Importing the data set
-The CSV file was carefully imported into Microsoft SQL Server Management Studio using the SQL Server Import and Export Wizard. To eliminate the problem of character encoding plaguing the data set, the 'code page' was changed from '1252 (ANSI Latin-I)' to '65001 (UTF-8)' on the wizard's dialog box. The data type of the columns was also changed to the 'Unicode string'.
+The Excel file was carefully imported into Microsoft SQL Server Management Studio using the SQL Server Import and Export Wizard.
 ### Retrieving the table information
 The stored procedure 'sp_help' was used to get a summary of the data set. This provided details such as the columns in the table, their data types, any indexes or constraints defined on the table, and other relevant information about the structure of the table.
- Query                 |     Output
-:---------------------:|:---------------------:
-  ![](table_info.png)  | ![](table_result.png) 
+## Query:
+![Screenshot (29)](https://github.com/Ikumoluyi-Taiwo/SQL-Queries/assets/139241043/1200f729-306a-42ec-9fed-d5f6a5ef65e7)
+## Output:
+![Screenshot (28)](https://github.com/Ikumoluyi-Taiwo/SQL-Queries/assets/139241043/f3676d34-993a-4182-891e-47a1ebb2b161)
 
-Additionally, to get a quick overview of the table, the appropriate query was written to view and count the rows of the data set.
-### Cleaning the special character in the 'Name' column
-Although changing the character encoding to UTF-8 took care of many occurrences of the special characters. There were still some instances that were yet to be taken care of. A special character 'NCHAR(65533)' was noticed in some entries and it was replaced by the first character in the corresponding LongName column. The resulting outcome can be observed in the 'NewName' column below.
- UPDATE query          |    
-:---------------------:|
-  ![](name2.png)       | 
-  
- Resulting outcome     |
-:---------------------:|
- ![](name1.png)        |
-### Removing the leading white space and numerical characters in the 'Club' column
-It was observed that the special character CHAR(10) along with occurrences of '1. ' were in the front of many entries in the 'Club' column. The REPLACE function was used to clean the special character while a CTE was written to perform further cleaning operations and extract clean data into a temporary table. The difference between the cleaned column and the dirty column can be observed below.
- UPDATE query          |    
-:---------------------:|
-  ![](club2.png)       | 
-  
- Resulting outcome     |
-:---------------------:|
- ![](club1.png)        |
-### Cleaning the 'Contract' column
-The 'Contract' column was observed to have a delimiter that indicated the beginning and end of each player's contract, while some were on loan. Two new columns were created 'ContractStart' and 'ContractEnd' columns to store the extracted values. Upon keen observation, the year in the 'Joined' column matched the 'ContractStart' for each player and this was used in completing the column. The year in the 'Loan Date End' column was also extracted to fill the 'ContractEnd' column for players on loan.
- UPDATE query          |    
-:---------------------:|
-  ![](contract2.png)   | 
-  
- Resulting outcome     |
-:---------------------:|
- ![](contract1.png)    |
-### Converting entries in the 'Height' and 'Weight' columns to uniform values
-The height of players was measured in centimeters or feet and inches. Since more players had their height measured in centimeters, those measured in feet and inches were converted for the purpose of consistency. A 'CASE' statement was used to achieve this and the approximate conversion factor was applied.
+## Standardizing the Date Format
+The dataset contained a date column which was converted from a datetime format to a standardized date format.
+### DateTime:
+![Screenshot (30)](https://github.com/Ikumoluyi-Taiwo/SQL-Queries/assets/139241043/2a43a281-2819-4807-9eaf-88b6f6479627)
 
-The same approach was applied to the 'Weight' column. Players' weight was measured in kilograms or pounds and since more players had their weight measured in kilograms, those measured in pounds were converted. Below, you can observe the contrast between the cleaned columns and the dirty columns.
- UPDATE query          |    
-:---------------------:|
-  ![](conversion1.png) | 
-  
- Resulting outcome     |
-:---------------------:|
- ![](conversion2.png)  |
-### Converting instances of 'K' to Thousands and 'M' to Millions in affected columns
-The 'Value', 'Wage', Release Clause', and 'Hits' columns had this problem. Entries ending with 'K' were multiplied by 1000 and those ending with 'M' were multiplied by 1000000 for the purpose of accuracy and to enable data aggregation. Below, you can observe the contrast between the cleaned columns and the dirty columns.
- UPDATE query          |    
-:---------------------:|
-  ![](num_value2.png)  |  
-  
- Resulting outcome     |
-:---------------------:|
- ![](num_value1.png)   |
-### Separating special characters from numerical values
-The 'WF', 'SM', and 'IR' columns all contained the star symbol which indicated each player's corresponding rating in the game. For the purpose of validity upon further analysis and data aggregation, the columns were updated with the numerical values alone. Observe the 'NewWF', 'NewSM', and 'NewIR' columns below for the cleaned values.
-UPDATE query           |   Resulting outcome   |  
-:---------------------:|:---------------------:|
- ![](star1.png)        |  ![](star2.png)       |
-### Checking and removing duplicate records
-A major aspect of the data cleaning process is the removal of duplicate records in the data set in order to maintain data accuracy and integrity. However, one must always make sure that there is indeed a duplicate record before proceeding to delete it.
+### Standardized Date: The resulting outcome can be observed in the 'SaleDateConverted' column below:
+![Screenshot (31)](https://github.com/Ikumoluyi-Taiwo/SQL-Queries/assets/139241043/3fd97aae-41c0-475e-bcf0-44193920ccfe)
 
-In this table, the duplicate check revealed that two players named 'Peng Wang' represented the same country, played for the same club, was of the same age, and had the same height. At first, this seemed like a duplicate record, but upon further observation of this record and upon visiting the link in the 'playerUrl' column for additional information, it was clear beyond reasonable doubt that they were different players.
- Query                 |    
-:---------------------:|
-  ![](duplicate1.png)  |  
-  
- Output                |
-:---------------------:|
- ![](duplicate2.png)   |
-### Dropping irrelevant columns
-Another aspect of the data cleaning process is the dropping of irrelevant columns. In order to improve the data analysis process and enhance model performance, it is important to drop irrelevant columns. Doing this will help reduce noise and clutter in the data set and thus improve computational efficiency. However, one must be sure a column is truly irrelevant before performing a permanent drop.
 
-In this table, the 'photoUrl' column can be considered irrelevant since it contains invalid URLs.
- Query                 |    
-:---------------------:|
-  ![](drop.png)        |
+## Populating property address data using a self-join of the NashvilleHousing table
+### It was observed that although some records contained the same ParcelIDs which indicated that the ParcelIDs linked to the same address, not all property address were populated. To solve this issue a self join was used. One example is that of records no 3036 and 3037:
+![Screenshot (33)](https://github.com/Ikumoluyi-Taiwo/SQL-Queries/assets/139241043/42a005c7-3855-4441-bd5c-504a9e9d5593)
 
-NB: The full SQL script used for cleaning the data is available in my SQL Queries [repository](https://github.com/emmywritescode/SQL-Queries/blob/main/CLEANING%20FIFA%2021%20DATA%20SET.sql) for examination or reuse.
+###The difference when the address has been populated can be seen below:
+![Screenshot (36)](https://github.com/Ikumoluyi-Taiwo/SQL-Queries/assets/139241043/6f906e7a-04c7-4008-92b3-968487d0aaf8)
+
+
+## Separating Property addresses into individual columns (Address, City, State)- Using Substring
+### The property address column was split from a single address column containing the address and city as seen below:
+![Screenshot (37)](https://github.com/Ikumoluyi-Taiwo/SQL-Queries/assets/139241043/83af88c0-cdb5-4fbe-981f-c51dc24504f4)
+
+## Into two indivividual columns named 'PropertySplitAddress' and 'PropertySplitCity':
+![Screenshot (38)](https://github.com/Ikumoluyi-Taiwo/SQL-Queries/assets/139241043/515673eb-79f3-4736-bd0e-734f327ca927)
+
+## Separating Owner addresses into individual columns (Address, City, State)- Using ParseName and Replace
+### The Owner address column was split from a single address column containing the address, city and state as seen below:
+![Screenshot (39)](https://github.com/Ikumoluyi-Taiwo/SQL-Queries/assets/139241043/c96c4e62-4eaa-47fd-836c-6cbb41783400)
+
+### Into three indivividual columns named 'PropertySplitAddress','PropertySplitCity' and 'PropertyState':
+![Screenshot (40)](https://github.com/Ikumoluyi-Taiwo/SQL-Queries/assets/139241043/487374fa-eacd-4aba-99ef-ed532ccd94a4)
+
+### Changing Y and N to Yes and No in "Sold as Vacant" field
+![Screenshot (42)](https://github.com/Ikumoluyi-Taiwo/SQL-Queries/assets/139241043/7bad11f7-49ec-4390-a29a-d2fcb56cfd13)
+
+### Removing Duplicates using CTE
+A major aspect of the data cleaning process is the removal of duplicate records in the data set to maintain data integrity and accuracy. However, one must always make sure that there is indeed a duplicate record before proceeding to delete it.
+
+In this table, the duplicate check revealed that there were multiple ParcelIDs, Sale dates, address, price and legal reference records that were supposed to be unique to each row but were the exact same therefore indicating there were duplicates of the same record in the dataset. 
+### The query below was used to remove all duplicates:
+![Screenshot (44)](https://github.com/Ikumoluyi-Taiwo/SQL-Queries/assets/139241043/711a782a-d5cc-4f2a-a10d-331a69d32902)
+
+### The Output:
+![Screenshot (45)](https://github.com/Ikumoluyi-Taiwo/SQL-Queries/assets/139241043/8097085e-d3f7-4864-9610-c5efac82587a)
+
+## Dropping Irrelevant Columns
+Another aspect of the data cleaning process is the dropping of irrelevant columns. To improve the data analysis process and enhance model performance, it is important to drop irrelevant columns. This helps reduce noise and clutter in the data set and as a result, the computational efficiency is improved. However, one must be sure a column is truly irrelevant before performing a permanent drop.
+
+In this table the SaleDate, OwnerAddress, PropertyAddress and TaxDistrict columns can be considered irrelevant since a new standardized date column has replaced SaleDate, new individual colums containing address, city and state have replaced the Owner and Pzroperty address columns, finally the TaxDistrict column is irrelevant to the analysis.
+
+### Query:
+![Screenshot (46)](https://github.com/Ikumoluyi-Taiwo/SQL-Queries/assets/139241043/9bb274b4-fcb9-409e-b18c-531bee8cf394) 
+
+NB: The full SQL script used for cleaning the data is available in my Nashville Data Cleaning [repository](https://github.com/emmywritescode/SQL-Queries/blob/main/CLEANING%20FIFA%2021%20DATA%20SET.sql) for examination or reuse.
+
 ## Conclusion
-Through completing this data cleaning project using SQL after having previously done the same task in Microsoft Excel, I have greatly learned and honed my SQL skills. This project provided me with the opportunity to leverage the power and flexibility of SQL for data cleaning and manipulation. 
+Completing this data cleaning project has greatly improved my SQL skills. I was afforded the opportunity to leverage the power and flexibility of SQL for data cleaning and manipulation. 
 
-The experience of completing this data cleaning project with SQL has not only expanded my technical skills but also provided me with a valuable skill set applicable to various data-related tasks. The ability to work with SQL gives me the confidence to tackle more complex data cleaning and manipulation projects in the future, enabling me to be more effective and efficient in my data analysis endeavors.
+The experience of cleaning this data with SQL has not only expanded my technical skills but also provided me with a valuable skill set that can be applied to various data-related tasks. The ability to work with SQL gives me the confidence to tackle more complex data cleaning and manipulation projects in the future, enabling me to be more effective and efficient in my data analysis endeavors.
