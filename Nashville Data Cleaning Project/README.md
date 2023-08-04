@@ -71,7 +71,7 @@ In this table the SaleDate, OwnerAddress, PropertyAddress and TaxDistrict column
 ### Query:
 ![Screenshot (46)](https://github.com/Ikumoluyi-Taiwo/SQL-Queries/assets/139241043/9bb274b4-fcb9-409e-b18c-531bee8cf394) 
 
-NB: The full SQL script used for cleaning the data is available in my Nashville Data Cleaning [repository](https://github.com/emmywritescode/SQL-Queries/blob/main/CLEANING%20FIFA%2021%20DATA%20SET.sql) for examination or reuse.
+NB: The full SQL script used for cleaning the data is available in my Nashville Data Cleaning [repository](https://github.com/Ikumoluyi-Taiwo/SQL-Queries/blob/main/Nashville%20Data%20Cleaning%20Project/Nashville%20Data%20Cleaning.sql) for examination or reuse.
 
 ## Conclusion
 Completing this data cleaning project has greatly improved my SQL skills. I was afforded the opportunity to leverage the power and flexibility of SQL for data cleaning and manipulation. 
